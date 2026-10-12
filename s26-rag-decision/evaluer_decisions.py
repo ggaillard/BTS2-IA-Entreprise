@@ -27,7 +27,7 @@ def main():
     if not chemin.exists():
         sys.exit("Rien à mesurer : lancez d'abord python s26-rag-decision/workflow.py")
     obtenus = {d["rapport"]: d for d in json.loads(chemin.read_text(encoding="utf-8"))}
-    n = justes = montants = graves = manquees = auto = 0
+    n = justes = montants = graves = manquees = auto = absents = 0
     calib = defaultdict(lambda: [0, 0])
     for nom, att in attendu.items():
         if nom.startswith("_"):
@@ -35,7 +35,8 @@ def main():
         n += 1
         d = obtenus.get(nom)
         if not d or "echec" in d:
-            print(f"{nom:20} ✗ pas traité ({(d or {}).get('echec', 'absent')[:60]})")
+            absents += 1
+            print(f"{nom:20} ✗ pas traité ({(d or {}).get('echec', 'absent de la dernière exécution')[:60]})")
             continue
         dec = d["decision"]
         ok = dec.get("decision") == att["decision"]
@@ -55,6 +56,10 @@ def main():
     print(f"Décisions justes : {justes}/{n}   ·   décision ET montant justes : {montants}/{n}")
     print("Calibration : " + " · ".join(f"confiance {k} → {v[1]}/{v[0]} justes" for k, v in sorted(calib.items())))
     print(f"Automatisation : {auto}/{n} dossiers sans relecture")
+    if absents:
+        print(f"\nVerdict : mesure INCOMPLÈTE — {absents} rapport(s) non traité(s) par la dernière exécution. "
+              "Relancez python s26-rag-decision/workflow.py sur les douze avant de conclure.")
+        return
     print("\nVerdict : " + ("mise en service REFUSÉE (erreur grave)" if graves else
                            "à améliorer : des relectures obligatoires ont été sautées" if manquees else
                            "acceptable pour un pilote avec relecture humaine"))

@@ -1,6 +1,6 @@
 # IA en entreprise — agents, RAG, workflows, décisions de confiance
 
-> BTS SIO 2 SLAM · module 2026-2027 · **Consignes des séances** : <https://ggaillard.github.io/portail-bts/distance/ia-entreprise.html>
+> BTS SIO 2 SLAM · module 2026-2027 · **Consignes des séances** : <https://ggaillard.github.io/BTS2-IA-Entreprise/> (publiées depuis `docs/` de ce dépôt)
 > Organisation, personnes, adresses et données : **fictives**.
 
 ## Le contexte : ThermiForez
